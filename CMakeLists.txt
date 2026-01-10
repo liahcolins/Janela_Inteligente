@@ -28,71 +28,43 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(picow_access_point C CXX ASM)
+project(MQTT_2 C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
-#add_subdirectory(inc)
 
-add_executable(picow_access_point_background 
-        picow_access_point.c
-        dhcpserver/dhcpserver.c
-        dnsserver/dnsserver.c
-        inc/ssd1306_i2c.c
-         
+add_executable(MQTT_2 
+        main.c
         )
 
-target_include_directories(picow_access_point_background PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts
-        ${CMAKE_CURRENT_LIST_DIR}/dhcpserver
-        ${CMAKE_CURRENT_LIST_DIR}/dnsserver
-        )
+pico_set_program_name(MQTT_2 "MQTT_2")
+pico_set_program_version(MQTT_2 "0.1")
 
-target_link_libraries(picow_access_point_background
+# Modify the below lines to enable/disable output over UART/USB
+pico_enable_stdio_uart(MQTT_2 0)
+pico_enable_stdio_usb(MQTT_2 1)
+
+# Add the standard library to the build
+target_link_libraries(MQTT_2
+        pico_stdlib
+        pico_multicore
+        pico_sync
+        hardware_pwm
         pico_cyw43_arch_lwip_threadsafe_background
-        pico_stdlib
-        hardware_pwm
         hardware_i2c
-        hardware_adc
-
-        
+        pico_lwip_mqtt
         )
-# You can change the address below to change the address of the access point
-pico_configure_ip4_address(picow_access_point_background PRIVATE
-        CYW43_DEFAULT_IP_AP_ADDRESS 192.168.4.1
-        )
-pico_add_extra_outputs(picow_access_point_background)
 
-# Habilita a saída serial via USB (importante para depuração)
-# Habilita a saída serial via USB (importante para depuração)
-pico_enable_stdio_usb(picow_access_point_background 1) # AQUI: Habilitado para este executável
-pico_enable_stdio_uart(picow_access_point_background 1) # Desabilita UART se não for usar
-
-
-add_executable(picow_access_point_poll
-        picow_access_point.c
-        dhcpserver/dhcpserver.c
-        dnsserver/dnsserver.c
-        )
-target_include_directories(picow_access_point_poll PRIVATE
+# Add the standard include files to the build
+target_include_directories(MQTT_2 PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts
-        ${CMAKE_CURRENT_LIST_DIR}/dhcpserver
-        ${CMAKE_CURRENT_LIST_DIR}/dnsserver
-        )
-target_link_libraries(picow_access_point_poll
-        pico_cyw43_arch_lwip_poll
-        pico_stdlib
-        hardware_pwm
-        hardware_i2c
-        hardware_adc
-        )
-# You can change the address below to change the address of the access point
-pico_configure_ip4_address(picow_access_point_poll PRIVATE
-        CYW43_DEFAULT_IP_AP_ADDRESS 192.168.4.1
-        )
-pico_add_extra_outputs(picow_access_point_poll)
-pico_enable_stdio_usb(picow_access_point_poll 1)
+        ${CMAKE_CURRENT_LIST_DIR}/WIFI_
+        ${CMAKE_CURRENT_LIST_DIR}/OLED_
+)
+
+# Add any user requested libraries
+#target_link_libraries(MQTT_2)
+
+pico_add_extra_outputs(MQTT_2)

@@ -1,3 +1,26 @@
+/**
+ * @file lwipopts.h
+ * @brief Configurações personalizadas da pilha LWIP para o Raspberry Pi Pico W.
+ *
+ * Este arquivo define as opções de compilação e os parâmetros operacionais da pilha TCP/IP leve LWIP (Lightweight IP),
+ * utilizada para fornecer conectividade de rede em sistemas embarcados. Ele adapta a pilha às particularidades
+ * do ambiente do Raspberry Pi Pico W, otimizando seu funcionamento para projetos com recursos limitados.
+ *
+ * As principais configurações incluem:
+ * - Modo de operação sem sistema operacional (`NO_SYS`)
+ * - Desativação da API de sockets (`LWIP_SOCKET`)
+ * - Tamanho de buffers, alinhamento de memória, número de segmentos e filas
+ * - Ativação de protocolos como ARP, ICMP, DHCP, TCP, UDP, DNS
+ * - Habilitação de callbacks de status e link da interface de rede
+ * - Níveis de debug e coleta de estatísticas
+ *
+ * Este arquivo é essencial para projetos que utilizam comunicação TCP/IP no Pico W, permitindo 
+ * ajustar o uso de memória e o comportamento da rede conforme as necessidades da aplicação.
+ *
+ * Referência: https://www.nongnu.org/lwip/2_1_x/group__lwip__opts.html
+ */
+
+
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
 
@@ -22,6 +45,7 @@
 #define MEM_SIZE                    4000
 #define MEMP_NUM_TCP_SEG            32
 #define MEMP_NUM_ARP_QUEUE          10
+#define MEMP_NUM_SYS_TIMEOUT        16
 #define PBUF_POOL_SIZE              24
 #define LWIP_ARP                    1
 #define LWIP_ETHERNET               1

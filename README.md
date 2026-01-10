@@ -1,1 +1,0 @@
-# Janela_Inteligente
